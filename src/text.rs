@@ -11,7 +11,7 @@ use crate::{
 };
 
 use crate::color::WHITE;
-use glam::vec2;
+use glam::{vec2, Vec2};
 
 use std::sync::{Arc, Mutex};
 pub(crate) mod atlas;
@@ -83,7 +83,7 @@ impl Font {
         let (metrics, bitmap) = self.font.rasterize(character, size as f32);
 
         if metrics.advance_height != 0.0 {
-            panic!("Vertical fonts are not supported");
+            //panic!("Vertical fonts are not supported");
         }
 
         let (width, height) = (metrics.width as u16, metrics.height as u16);
@@ -238,6 +238,7 @@ pub struct TextParams<'a> {
     /// Default is 0.0
     pub rotation: f32,
     pub color: Color,
+    pub anchor: Option<Vec2>,
 }
 
 impl<'a> Default for TextParams<'a> {
@@ -249,6 +250,7 @@ impl<'a> Default for TextParams<'a> {
             font_scale_aspect: 1.0,
             color: WHITE,
             rotation: 0.0,
+            anchor: None,
         }
     }
 }
@@ -290,6 +292,7 @@ pub fn draw_text(text: &str, x: f32, y: f32, font_size: f32, color: Color) {
             font_size: font_size as u16,
             font_scale: 1.0,
             color,
+            anchor: Some(vec2(0., 0.5)),
             ..Default::default()
         },
     )
@@ -308,6 +311,12 @@ pub fn draw_text_ex(text: &str, x: f32, y: f32, params: TextParams) {
     let font_size = (params.font_size as f32 * dpi_scaling).ceil() as u16;
 
     let mut total_width = 0.;
+
+    let size = measure_text(text, params.font, params.font_size, params.font_scale);
+
+    let anchor = params.anchor.unwrap_or(vec2(0.5,0.5));
+    let mut anchor = vec2(size.width * anchor.x, size.height * (1. - anchor.y));
+
     for character in text.chars() {
         if !font
             .characters
@@ -343,21 +352,20 @@ pub fn draw_text_ex(text: &str, x: f32, y: f32, params: TextParams) {
             glyph.w as f32,
             glyph.h as f32,
         );
-
         crate::texture::draw_texture_ex(
             &crate::texture::Texture2D {
                 texture: TextureHandle::Unmanaged(atlas.texture()),
             },
-            dest.x,
-            dest.y,
+            dest.x - anchor.x, dest.y + anchor.y,
             params.color,
             crate::texture::DrawTextureParams {
                 dest_size: Some(vec2(dest.w, dest.h)),
                 source: Some(source),
                 rotation: angle_rad,
+                anchor: Some(vec2(0., 0.)),
                 pivot: Option::Some(vec2(dest.x, dest.y)),
                 ..Default::default()
-            },
+            }
         );
     }
 }

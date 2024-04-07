@@ -230,6 +230,7 @@ impl Image {
             bytes,
         }
     }
+
     
     /// Blends this image with another image (of identical dimensions)
     /// Inspired by  OpenCV saturated blending
@@ -288,7 +289,7 @@ impl Image {
                 b: f32::min(c1.b * (1. - c2.a) + c2.b * c2.a, 1.),
                 a: f32::min(c1.a + c2.a, 1.)
             };
- 
+
             self.bytes[i * 4] = (new_color.r * 255.) as u8;
             self.bytes[i * 4 + 1] = (new_color.g * 255.) as u8;
             self.bytes[i * 4 + 2] = (new_color.b * 255.) as u8;
@@ -391,6 +392,8 @@ pub struct DrawTextureParams {
     /// E.g. pivot (0,0) rotates around the top left corner of the screen, not of the
     /// texture.
     pub pivot: Option<Vec2>,
+    pub scale: Option<Vec2>,
+    pub anchor: Option<Vec2>,
 }
 
 impl Default for DrawTextureParams {
@@ -400,6 +403,8 @@ impl Default for DrawTextureParams {
             source: None,
             rotation: 0.,
             pivot: None,
+            scale: None,
+            anchor: Some(vec2(0.5,0.5)),
             flip_x: false,
             flip_y: false,
         }
@@ -454,8 +459,15 @@ pub fn draw_texture_ex(
         Some(dst) => (dst.x, dst.y),
         _ => (sw, sh),
     };
-    let mut x = x;
-    let mut y = y;
+
+    let scale = params.scale.unwrap_or(vec2(1., 1.));
+    w *= scale.x;
+    h *= scale.y;
+
+    let anchor = params.anchor.unwrap_or(vec2(0.5, 0.5));
+    let pivot = params.pivot.unwrap_or(vec2(x, y));
+    let mut x = x - w * anchor.x;
+    let mut y = y - h * anchor.y;
     if params.flip_x {
         x = x + w;
         w = -w;
@@ -464,8 +476,7 @@ pub fn draw_texture_ex(
         y = y + h;
         h = -h;
     }
-
-    let pivot = params.pivot.unwrap_or(vec2(x + w / 2., y + h / 2.));
+    
     let m = pivot;
     let p = [
         vec2(x, y) - pivot,
