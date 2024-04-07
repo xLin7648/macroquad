@@ -43,6 +43,8 @@ mod dummy_audio {
 
         pub fn set_volume(&self, _ctx: &mut AudioContext, _volume: f32) {}
 
+        pub fn set_time(&self, _ctx: &mut AudioContext, _volume: f32) {}
+
         pub fn is_loaded(&self) -> bool {
             false
         }
@@ -175,4 +177,9 @@ pub fn stop_sound(sound: &Sound) {
 pub fn set_sound_volume(sound: &Sound, volume: f32) {
     let ctx = &mut get_context().audio_context;
     sound.0.set_volume(&mut ctx.native_ctx, volume)
+}
+
+pub fn set_sound_time(sound: &Sound, time: f32) {
+    let ctx = &mut get_context().audio_context;
+    sound.0.set_time(&mut ctx.native_ctx, time)
 }
