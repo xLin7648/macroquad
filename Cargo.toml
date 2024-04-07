@@ -1,10 +1,10 @@
 [package]
 name = "macroquad"
 version = "0.4.5"
-authors = ["not-fl3 <not.fl3@gmail.com>"]
+authors = ["xLin7648 <xLinAbsL@outlook.com>"]
 edition = "2021"
-homepage = "https://github.com/not-fl3/macroquad"
-repository = "https://github.com/not-fl3/macroquad"
+homepage = "https://github.com/xLin7648/macroquad"
+repository = "https://github.com/xLin7648/macroquad"
 description = """
 Simple and easy to use graphics library
 """
@@ -35,7 +35,7 @@ fontdue = "0.7"
 bumpalo = "3.4"
 backtrace = { version = "0.3.60", optional = true, default-features = false, features = [ "std", "libbacktrace" ] }
 log = { version = "0.4", optional = true }
-quad-snd = { version = "0.2", optional = true }
+quad-snd = { path = "https://github.com/xLin7648/quad-snd.git", optional = true }
 slotmap = "1.0"
 
 [dev-dependencies]
