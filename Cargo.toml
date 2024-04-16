@@ -27,6 +27,9 @@ all-features = true
 
 [dependencies]
 miniquad = { git = "https://github.com/xLin7648/miniquad.git", features = ["log-impl"] }
+# miniquad = { path = "D:/Documents/GitHub/miniquad", features = ["log-impl"] }
+quad-snd = { git = "https://github.com/xLin7648/quad-snd.git", optional = true }
+# quad-snd = { path = "D:/Documents/GitHub/quad-snd", optional = true }
 quad-rand = "0.2.1"
 glam = {version = "0.21", features = ["scalar-math"] }
 image = { version = "0.24", default-features = false, features = ["png", "tga"] }
@@ -35,8 +38,6 @@ fontdue = "0.7"
 bumpalo = "3.4"
 backtrace = { version = "0.3.60", optional = true, default-features = false, features = [ "std", "libbacktrace" ] }
 log = { version = "0.4", optional = true }
-# quad-snd = { path = "D:/Documents/GitHub/quad-snd", optional = true }
-quad-snd = { git = "https://github.com/xLin7648/quad-snd.git", optional = true }
 slotmap = "1.0"
 
 [dev-dependencies]
