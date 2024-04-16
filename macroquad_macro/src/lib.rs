@@ -66,6 +66,7 @@ pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
             }
         }
     }
+
     if let TokenTree::Ident(ident) = source.next().unwrap() {
         assert_eq!(format!("{}", ident), "async");
 
@@ -83,7 +84,7 @@ pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     if let TokenTree::Ident(ident) = source.next().unwrap() {
-        assert_eq!(format!("{}", ident), "main");
+        // assert_eq!(format!("{}", ident), "main");
 
         modified.extend(std::iter::once(TokenTree::Ident(Ident::new(
             "amain",
@@ -117,7 +118,7 @@ pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
     let crate_name = crate_rename.unwrap_or_else(|| "macroquad".to_string());
     let mut prelude: TokenStream = format!(
         "
-    fn main() {{
+    pub fn main() {{
         {crate_name}::Window::{method}({ident}, {main});
     }}
     ",
